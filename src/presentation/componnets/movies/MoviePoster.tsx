@@ -12,6 +12,9 @@ interface Props {
 
 export const MoviePoster = ({ movie, height = 420, width = 300 }: Props) => {
   const navigation = useNavigation<NavigationProp<RootStackParams>>();
+
+  const removeSpaces = (movie: string) => movie.replace(/\s+/g, "");
+
   return (
     <Pressable
       onPress={() => navigation.navigate("Details", { movieId: movie.id })}
@@ -27,7 +30,11 @@ export const MoviePoster = ({ movie, height = 420, width = 300 }: Props) => {
     >
       <View style={styles.iamgeContainer}>
         {/* La url de la imagen solo devuelve un h1 como resultado */}
-        <Image style={styles.image} source={{ uri: movie.poster }}></Image>
+
+        <Image
+          style={styles.image}
+          source={{ uri: removeSpaces(movie.poster) }}
+        />
         {/* Puse este text para saber que pelicula es */}
         <Text style={{ margin: 20 }}> Titulo: {movie.title} </Text>
       </View>
