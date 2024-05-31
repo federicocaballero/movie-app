@@ -1,31 +1,34 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
-import { View, Text } from "react-native";
+import { StackScreenProps } from "@react-navigation/stack";
+import { Text, View } from "react-native";
 import { RootStackParams } from "../../navigation/Navigation";
 import { useMovie } from "../../hooks/useMovie";
 import { MovieHeader } from "../../componnets/movie/MovieHeader";
+import { MovieDetails } from "../../componnets/movie/MovieDetails";
+import { ScrollView } from "react-native";
+import { FullScreenLoader } from "../../componnets/loaders/FullScreenLoader";
 
-interface Props extends NativeStackScreenProps<RootStackParams, "Details"> {}
+interface Props extends StackScreenProps<RootStackParams, "Details"> {}
 
 export const DetailsScreen = ({ route }: Props) => {
   const { movieId } = route.params;
+  // const { movieId } = useRoute().params;
+  const { isLoading, movie, cast = [] } = useMovie(movieId);
 
-  const { isLoading, movie } = useMovie(movieId);
   if (isLoading) {
-    return <Text>Loaging...</Text>;
+    return <FullScreenLoader />;
   }
-  console.log(movieId);
 
   return (
-    <View>
-      {/* HEADER */}
+    <ScrollView>
+      {/* Header */}
       <MovieHeader
         originalTitle={movie!.originalTitle}
-        poster={movie!.poster}
         title={movie!.title}
+        poster={movie!.poster}
       />
 
-      {/* DETALLES */}
-    </View>
+      {/* Details */}
+      <MovieDetails movie={movie!} cast={cast} />
+    </ScrollView>
   );
 };
